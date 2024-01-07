@@ -2,40 +2,55 @@ import requests
 import pandas as pd
 from datetime import datetime
 
-csv_file_path = "input.csv"
+csv_file_path = "inputs/input.csv"
 current_date_time = datetime.now().strftime("%Y%m%d-%H%M")
+output_file_name = "outputs/output-" + current_date_time + ".csv"
 
-SoundchartsAppId = "your_soundcharts_appid" # Replace by your Soundcharts AppID
-SoundchartsApiKey = "your_soundcharts_api-key" # Replace by your Soundcharts API Key
 
-def getSpotifyListeners(soundcharts_id): # Gets the monthly listeners for a given artists' Soundcharts ID
-    api_url = f"https://customer.api.soundcharts.com/api/v2/artist/{soundcharts_id}/streaming/spotify/listeners" # Use the appropriate API call
+# Replace by your Soundcharts credentials
+SoundchartsAppId = "your_soundcharts_AppID"
+SoundchartsApiKey = "your_soundcharts_APIKey"
+
+
+# Gets the monthly listeners for a given artists' Soundcharts ID
+def getSpotifyListeners(soundcharts_id):
+
+    # Use the appropriate API call
+    api_url = f"https://customer.api.soundcharts.com/api/v2/artist/{soundcharts_id}/streaming/spotify/listeners"
     headers = {"x-app-id": SoundchartsAppId, "x-api-key": SoundchartsApiKey}
     response = requests.get(api_url, headers=headers)
 
     if response.status_code == 200:
         data = response.json()
-        value = data.get("items", [{}])[0].get("value") # Retrieve the value from the "value" key pair (Spotify monthly listeners)
+        # Retrieve the value from the "value" key pair (Spotify monthly listeners)
+        value = data.get("items", [{}])[0].get("value")
 
         if value is not None:
             return value
         else:
-            print(f"No valid data found in the response for Soundcharts ID {soundcharts_id}")
+            print(
+                f"No valid data found in the response for Soundcharts ID {soundcharts_id}")
         return None
-        
-    else:
-        print(f"Error fetching data for Soundcharts ID {soundcharts_id}. Status code: {response.status_code}")
-        return None
-        
 
-def generateTable(csv_file): # Generates the expected .csv output file
-    print('Fetching artists data...') # Placeholder to inform user that the program is running
+    else:
+        print(
+            f"Error fetching data for Soundcharts ID {soundcharts_id}. Status code: {response.status_code}")
+        return None
+
+# Generates the expected .csv output file
+
+
+def generateTable(csv_file):
+    # Placeholder to inform user that the program is running
+    print('Fetching artists data...')
+
     df = pd.read_csv(csv_file)
     rows_list = []  # List to store rows as dictionaries
 
     for index, row in df.iterrows():
         soundcharts_id = row["soundcharts_id"]
-        listeners_value = getSpotifyListeners(soundcharts_id) # Loops through the getSpotifyListeners function going through all the Soundcharts IDs provided in the .csv input file
+        # Loops through the getSpotifyListeners function going through all the Soundcharts IDs provided in the .csv input file
+        listeners_value = getSpotifyListeners(soundcharts_id)
 
         if listeners_value is not None:
             row_dict = {
@@ -59,10 +74,11 @@ def generateTable(csv_file): # Generates the expected .csv output file
         ]
 
         # Save the DataFrame to a new CSV file
-        output_file_name = "output-" + current_date_time + ".csv"
         result_table.to_csv(output_file_name, index=False)
     else:
         print("No valid data found.")
+    # Placeholder to inform user that the program is done executing
     print(f'Done! File saved to {output_file_name}.')
+
 
 generateTable(csv_file_path)
