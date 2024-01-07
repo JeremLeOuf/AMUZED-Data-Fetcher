@@ -6,7 +6,6 @@ csv_file_path = "inputs/input.csv"
 current_date_time = datetime.now().strftime("%Y%m%d-%H%M")
 output_file_name = "outputs/output-" + current_date_time + ".csv"
 
-
 # Replace by your Soundcharts credentials
 SoundchartsAppId = "your_soundcharts_AppID"
 SoundchartsApiKey = "your_soundcharts_APIKey"
@@ -14,7 +13,7 @@ SoundchartsApiKey = "your_soundcharts_APIKey"
 
 # Gets the monthly listeners for a given artists' Soundcharts ID
 def getSpotifyListeners(soundcharts_id):
-
+    
     # Use the appropriate API call
     api_url = f"https://customer.api.soundcharts.com/api/v2/artist/{soundcharts_id}/streaming/spotify/listeners"
     headers = {"x-app-id": SoundchartsAppId, "x-api-key": SoundchartsApiKey}
@@ -22,8 +21,7 @@ def getSpotifyListeners(soundcharts_id):
 
     if response.status_code == 200:
         data = response.json()
-        # Retrieve the value from the "value" key pair (Spotify monthly listeners)
-        value = data.get("items", [{}])[0].get("value")
+        value = data.get("items", [{}])[0].get("value") # Retrieve the value from the "value" key pair (Spotify monthly listeners)
 
         if value is not None:
             return value
@@ -37,21 +35,18 @@ def getSpotifyListeners(soundcharts_id):
             f"Error fetching data for Soundcharts ID {soundcharts_id}. Status code: {response.status_code}")
         return None
 
+
 # Generates the expected .csv output file
-
-
 def generateTable(csv_file):
-    # Placeholder to inform user that the program is running
-    print('Fetching artists data...')
-
+    print('Fetching artists data...') # Placeholder to inform user that the program is running
+    
     df = pd.read_csv(csv_file)
     rows_list = []  # List to store rows as dictionaries
 
-    for index, row in df.iterrows():
+    for index, row in df.iterrows(): 
         soundcharts_id = row["soundcharts_id"]
-        # Loops through the getSpotifyListeners function going through all the Soundcharts IDs provided in the .csv input file
-        listeners_value = getSpotifyListeners(soundcharts_id)
-
+        listeners_value = getSpotifyListeners(soundcharts_id) # Loops through the getSpotifyListeners function going through all the Soundcharts IDs provided in the .csv input file
+        
         if listeners_value is not None:
             row_dict = {
                 "backend_id": row.get("backend_id", None),
@@ -77,8 +72,6 @@ def generateTable(csv_file):
         result_table.to_csv(output_file_name, index=False)
     else:
         print("No valid data found.")
-    # Placeholder to inform user that the program is done executing
-    print(f'Done! File saved to {output_file_name}.')
-
+    print(f'Done! File saved to {output_file_name}.') # Placeholder to inform user that the program is done executing
 
 generateTable(csv_file_path)
