@@ -4,8 +4,8 @@ from datetime import datetime
 
 csv_file_path = "input.csv"
 
-SoundchartsAppId = "JDESHAYES1_412F182E"
-SoundchartsApiKey = "33f6bf2bf1402370"
+SoundchartsAppId = "your_soundcharts_appid"
+SoundchartsApiKey = "your_soundcharts_api-key"
 
 
 def getSpotifyListeners(soundcharts_id):
