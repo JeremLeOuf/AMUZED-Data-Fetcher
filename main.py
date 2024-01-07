@@ -11,7 +11,7 @@ SoundchartsAppId = "your_soundcharts_AppID"
 SoundchartsApiKey = "your_soundcharts_APIKey"
 
 
-# Gets the monthly listeners for a given artists' Soundcharts ID
+# Get the monthly listeners for a given artist' Soundcharts ID
 def getSpotifyListeners(soundcharts_id):
     
     # Use the appropriate API call
@@ -36,7 +36,7 @@ def getSpotifyListeners(soundcharts_id):
         return None
 
 
-# Generates the expected .csv output file
+# Generate the expected .csv output file
 def generateTable(csv_file):
     print('Fetching artists data...') # Placeholder to inform user that the program is running
     
@@ -45,7 +45,7 @@ def generateTable(csv_file):
 
     for index, row in df.iterrows(): 
         soundcharts_id = row["soundcharts_id"]
-        listeners_value = getSpotifyListeners(soundcharts_id) # Loops through the getSpotifyListeners function going through all the Soundcharts IDs provided in the .csv input file
+        listeners_value = getSpotifyListeners(soundcharts_id) # Loop through the `getSpotifyListeners` function going through all the Soundcharts IDs provided in the .csv input file
         
         if listeners_value is not None:
             row_dict = {
